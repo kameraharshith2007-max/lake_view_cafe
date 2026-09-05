@@ -1,4 +1,4 @@
-import { motion, useScroll, useTransform } from 'framer-motion';
+import { motion, useReducedMotion, useScroll, useTransform } from 'framer-motion';
 import { useRef } from 'react';
 import { Star, MapPin, ChevronDown } from 'lucide-react';
 import { cafe } from '@/data/cafe';
@@ -13,15 +13,58 @@ export default function Hero() {
   const scale = useTransform(scrollYProgress, [0, 1], [1, 1.15]);
   const textY = useTransform(scrollYProgress, [0, 1], ['0%', '50%']);
   const opacity = useTransform(scrollYProgress, [0, 0.8], [1, 0]);
+  const reduceMotion = useReducedMotion();
 
   return (
     <section ref={ref} id="home" className="relative h-screen min-h-[640px] w-full overflow-hidden">
+      {/* Brief cinematic brand reveal */}
+      <motion.div
+        initial={{ opacity: 1 }}
+        animate={{ opacity: 0 }}
+        transition={{
+          delay: reduceMotion ? 0 : 1.05,
+          duration: reduceMotion ? 0.15 : 0.65,
+          ease: 'easeInOut',
+        }}
+        className="pointer-events-none fixed inset-0 z-[100] flex items-center justify-center overflow-hidden bg-ink"
+        aria-hidden="true"
+      >
+        <motion.div
+          initial={{ opacity: 0, scale: 0.98 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{
+            delay: reduceMotion ? 0 : 0.12,
+            duration: reduceMotion ? 0.01 : 0.7,
+            ease: [0.16, 1, 0.3, 1],
+          }}
+          className="absolute inset-0 bg-[radial-gradient(circle_at_50%_48%,rgba(74,122,138,0.2),transparent_34%)]"
+        />
+        <motion.span
+          initial={{ opacity: 0, y: 12, letterSpacing: '0.28em' }}
+          animate={{ opacity: 1, y: 0, letterSpacing: '0.08em' }}
+          transition={{
+            delay: reduceMotion ? 0 : 0.18,
+            duration: reduceMotion ? 0.01 : 0.75,
+            ease: [0.16, 1, 0.3, 1],
+          }}
+          className="font-brand relative text-center text-xl text-ivory sm:text-2xl md:text-3xl"
+        >
+          Lake View Cafe
+        </motion.span>
+        <motion.span
+          initial={{ scaleX: 0, opacity: 0 }}
+          animate={{ scaleX: 1, opacity: 0.5 }}
+          transition={{ delay: reduceMotion ? 0 : 0.4, duration: reduceMotion ? 0.01 : 0.8 }}
+          className="absolute bottom-[43%] h-px w-24 origin-center bg-cyan sm:w-32"
+        />
+      </motion.div>
+
       {/* Parallax background */}
       <motion.div style={{ y, scale }} className="absolute inset-0">
         <img
-          src="https://images.pexels.com/photos/5940034/pexels-photo-5940034.jpeg?auto=compress&cs=tinysrgb&w=1920"
-          alt="Lakeside cafe terrace at sunset at Lake View Cafe in Shamshabad, Hyderabad"
-          className="h-full w-full object-cover"
+          src="/image.png"
+          alt="Lake View Cafe terrace with blue seating, lake views, and warm lights in Shamshabad, Hyderabad"
+          className="h-full w-full object-cover object-[center_45%] brightness-[0.82] saturate-[0.92] sm:object-center"
           loading="eager"
           fetchPriority="high"
         />
